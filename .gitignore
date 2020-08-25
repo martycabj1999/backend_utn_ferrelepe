@@ -1,0 +1,9 @@
+.idea
+.env
+node_modules
+logs
+*wav
+*jpg
+*png
+*jpeg
+config/index.js
