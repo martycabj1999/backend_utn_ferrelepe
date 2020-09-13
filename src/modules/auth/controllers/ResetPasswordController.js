@@ -16,7 +16,7 @@ import {
 //I check if the password exists in Recover password
 module.exports.forgibbenPasswordAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     let response = {
         errors: [],
@@ -49,7 +49,7 @@ module.exports.forgibbenPasswordAction = async function (req, res) {
 //I update the password that was forget
 module.exports.changeForgibbenPasswordAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     let response = {
         errors: [],
@@ -85,7 +85,7 @@ module.exports.changeForgibbenPasswordAction = async function (req, res) {
 
 module.exports.getRestorePasswordAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     let response = {
         errors: [],

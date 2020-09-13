@@ -147,6 +147,49 @@
                         "read:forum"
                     ]
                 }]
+            }
+        },
+        "/forums/forum/{id}": {
+            "get": {
+                "tags": [
+                    "Forum"
+                ],
+                "summary": "Editar foro por ID",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id de foro",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Forum successfully modified"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    },
+                    "404": {
+                        "description": "We have not found a forum with that ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:forum",
+                        "read:forum"
+                    ]
+                }]
             },
             "put": {
                 "tags": [
@@ -163,6 +206,13 @@
                 ],
 
                 "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id de foro",
+                        "required": true,
+                        "type": "string"
+                    },
                     {
                         "name": "name",
                         "in": "formData",
@@ -232,7 +282,6 @@
                 }
             }
         },
-
         "/posts/post": {
             "post": {
                 "tags": [
@@ -308,6 +357,49 @@
                         "read:post"
                     ]
                 }]
+            }
+        },
+        "/posts/post/{id}": {
+            "get": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Editar post por ID",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de post",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post successfully modified"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    },
+                    "404": {
+                        "description": "We have not found a post with that ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:post",
+                        "read:post"
+                    ]
+                }]
             },
             "put": {
                 "tags": [
@@ -326,7 +418,7 @@
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "formData",
+                        "in": "path",
                         "description": "ID de post",
                         "required": true,
                         "type": "integer"
@@ -414,7 +506,6 @@
                 }
             }
         },
-
         "/tags/tag": {
             "post": {
                 "tags": [
@@ -455,54 +546,6 @@
                         "read:tag"
                     ]
                 }]
-            },
-            "put": {
-                "tags": [
-                    "Tag"
-                ],
-                "summary": "Editar tag por ID",
-                "description": "",
-                "consumes": [
-                    "application/x-www-form-urlencoded"
-                ],
-                "produces": [
-                    "application/json",
-                    "application/xml"
-                ],
-
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "formData",
-                        "description": "ID del tag",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "name": "name",
-                        "in": "formData",
-                        "description": "nombre de foro",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Tag successfully modified"
-                    },
-                    "401": {
-                        "description": "Not authorized"
-                    },
-                    "404": {
-                        "description": "We have not found a tag with that ID"
-                    }
-                },
-                "security": [{
-                    "auth_token": [
-                        "write:tag",
-                        "read:tag"
-                    ]
-                }]
             }
         },
         "/files": {
@@ -526,7 +569,7 @@
                 }
             }
         },
-        "/comments": {
+        "/comments/{post_id}": {
             "get": {
                 "tags": [
                     "Comments"
@@ -536,6 +579,15 @@
                 "produces": [
                     "application/json",
                     "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "post_id",
+                        "in": "path",
+                        "description": "ID del Post",
+                        "required": true,
+                        "type": "integer"
+                    },
                 ],
                 "responses": {
                     "200": {
@@ -548,7 +600,6 @@
             }
         }
     },
-
     "securityDefinitions": {
         "auth_token": {
             "type": "apiKey",

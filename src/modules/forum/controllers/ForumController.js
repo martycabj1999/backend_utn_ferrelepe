@@ -6,17 +6,13 @@ import {
 import {
     readForumsService,
     addForumService,
+    getForumService,
     updateForumService
 } from '../services/ForumService'
-import {
-    createResponseFormat
-} from '../../../helpers/responseFormat'
-
-let response = createResponseFormat();
 
 export const readForumsAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     try {
         const forums = await readForumsService()
@@ -29,9 +25,24 @@ export const readForumsAction = async function (req, res) {
     }
 }
 
+export const getForumAction = async function (req, res) {
+
+    let response = logRequest(req)
+
+    try {
+        const forums = await getForumService(req.params.id)
+        response.data = forums
+        return res.status(200).json(response)
+    } catch (error) {
+        logError(req, error)
+        response.errors.push(error)
+        return res.status(500).send(response)
+    }
+}
+
 export const addForumAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
     let {
         name,
         description,
@@ -52,7 +63,7 @@ export const addForumAction = async function (req, res) {
 }
 
 export const updateForumAction = async function (req, res) {
-    logRequest(req)
+    let response = logRequest(req)
     try {
         let {
             id,

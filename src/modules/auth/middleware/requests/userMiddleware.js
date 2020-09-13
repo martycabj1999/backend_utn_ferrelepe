@@ -27,29 +27,66 @@ export const authActionMiddleware = requestValidate([
         .exists()
         .withMessage(MessageValidator.isRequired('email'))
         .custom(async (email, req) => {
-        const body = req.req.body;
-        const userExist = await User.findOne({
-            where: {
-                email: body.email,
-            },
-        })
-        if (!userExist) {
-            return Promise.reject(MessageResponse.notFound('email'));
-        }
-    }),
+            const body = req.req.body;
+            const userExist = await User.findOne({
+                where: {
+                    email: body.email,
+                },
+            })
+            if (!userExist) {
+                return Promise.reject(MessageResponse.notFound('email'));
+            }
+        }),
     check('password')
         .exists()
         .withMessage(MessageValidator.isRequired('password'))
         .isLength({ min: 6 })
-        .withMessage(MessageValidator.minLength('password', 6)),
+        .withMessage(MessageValidator.minLength('password', 6))
+        .bail()
+        .custom(async (email, req) => {
+            const body = req.req.body;
+            const user = await User.findOne({
+                where: {
+                    email: body.email,
+                },
+            })
+            const validPassword = bcryptjs.compareSync(body.password, user.password);
+            if (!validPassword) {
+                return Promise.reject('El email o contraseña es incorrecto');
+            }
+        }),
 ]);
 
 export const registerActionMiddleware = requestValidate([
-    check('username')
+    check('name')
         .exists()
         .withMessage(MessageValidator.isRequired('username'))
         .isLength({ min: 3, max: 50 })
         .withMessage(MessageValidator.betweenLength('username', 3, 50)),
+
+    check('lastname')
+        .exists()
+        .withMessage(MessageValidator.isRequired('username'))
+        .isLength({ min: 3, max: 50 })
+        .withMessage(MessageValidator.betweenLength('username', 3, 50)),
+
+    check('username')
+        .exists()
+        .withMessage(MessageValidator.isRequired('username'))
+        .isLength({ min: 3, max: 50 })
+        .withMessage(MessageValidator.betweenLength('username', 3, 50))
+        .bail()
+        .custom(async (i, req) => {
+            const body = req.req.body;
+            const userExist = await User.findOne({
+                where: {
+                    username: body.username,
+                },
+            });
+            if (userExist) {
+                return Promise.reject(MessageValidator.inUse('username'));
+            }
+        }),
 
     check('email')
         .exists()
@@ -60,16 +97,16 @@ export const registerActionMiddleware = requestValidate([
         .withMessage(MessageValidator.mustBeOfType('email', 'email'))
         .bail()
         .custom(async (i, req) => {
-        const body = req.req.body;
-        const userExist = await User.findOne({
-            where: {
-                email: body.email,
-            },
-        });
-        if (userExist) {
-            return Promise.reject(MessageValidator.inUse('email'));
-        }
-    }),
+            const body = req.req.body;
+            const userExist = await User.findOne({
+                where: {
+                    email: body.email,
+                },
+            });
+            if (userExist) {
+                return Promise.reject(MessageValidator.inUse('email'));
+            }
+        }),
 
     check('password')
         .exists()
@@ -79,13 +116,36 @@ export const registerActionMiddleware = requestValidate([
 ]);
 
 export const addUserActionMiddleware = requestValidate([
-    check('username')
+
+    check('name')
         .exists()
-        .not()
-        .isEmpty()
         .withMessage(MessageValidator.isRequired('username'))
         .isLength({ min: 3, max: 50 })
         .withMessage(MessageValidator.betweenLength('username', 3, 50)),
+
+    check('lastname')
+        .exists()
+        .withMessage(MessageValidator.isRequired('username'))
+        .isLength({ min: 3, max: 50 })
+        .withMessage(MessageValidator.betweenLength('username', 3, 50)),
+
+    check('username')
+        .exists()
+        .withMessage(MessageValidator.isRequired('username'))
+        .isLength({ min: 3, max: 50 })
+        .withMessage(MessageValidator.betweenLength('username', 3, 50))
+        .bail()
+        .custom(async (i, req) => {
+            const body = req.req.body;
+            const userExist = await User.findOne({
+                where: {
+                    username: body.username,
+                },
+            });
+            if (userExist) {
+                return Promise.reject(MessageValidator.inUse('username'));
+            }
+        }),
 
     check('email')
         .exists()
@@ -98,16 +158,16 @@ export const addUserActionMiddleware = requestValidate([
         .withMessage(MessageValidator.mustBeOfType('email', 'email'))
         .bail()
         .custom(async (i, req) => {
-        const body = req.req.body;
-        const userExist = await User.findOne({
-            where: {
-                email: body.email,
-            },
-        });
-        if (userExist) {
-            return Promise.reject(MessageValidator.inUse('email'));
-        }
-    }),
+            const body = req.req.body;
+            const userExist = await User.findOne({
+                where: {
+                    email: body.email,
+                },
+            });
+            if (userExist) {
+                return Promise.reject(MessageValidator.inUse('email'));
+            }
+        }),
 
     check('password')
         .exists()
@@ -127,22 +187,55 @@ export const updateUserActionMiddleware = requestValidate([
         .exists()
         .withMessage(MessageValidator.isRequired('id')),
 
+
+    check('name')
+        .optional()
+        .isLength({ min: 3, max: 50 })
+        .withMessage(MessageValidator.betweenLength('username', 3, 50)),
+
+    check('lastname')
+        .optional()
+        .isLength({ min: 3, max: 50 })
+        .withMessage(MessageValidator.betweenLength('username', 3, 50)),
+
     check('username')
         .optional()
         .isLength({ min: 3, max: 50 })
         .withMessage(MessageValidator.betweenLength('username', 3, 50))
         .bail()
         .custom(async (username, req) => {
-        const usernameExist = await User.count({
-            where: {
-                username: username,
-                id: {
-                    [Op.ne]: req.req.params.id,
+            const usernameExist = await User.count({
+                where: {
+                    username: username,
+                    id: {
+                        [Op.ne]: req.req.params.id,
+                    },
                 },
-            },
-        });
-        if (usernameExist > 0) {
-            return Promise.reject(MessageValidator.inUse('username'));
-        }
-    }),
+            });
+            if (usernameExist > 0) {
+                return Promise.reject(MessageValidator.inUse('username'));
+            }
+        }),
+]);
+
+export const passwordActionMiddleware = requestValidate([
+    check('currentPassword')
+        .exists()
+        .withMessage(MessageValidator.isRequired('currentPassword'))
+        .isLength({ min: 6 })
+        .withMessage(MessageValidator.minLength('currentPassword', 6))
+        .bail()
+        .custom(async (email, req) => {
+            const body = req.req.body;
+            const user = await User.findByPk(req.req.user.id)
+            const validPassword = bcryptjs.compareSync(body.currentPassword, user.password);
+            if (!validPassword) {
+                return Promise.reject('La contraseña actual no coincide con la del sistema');
+            }
+        }),
+    check('newPassword')
+        .exists()
+        .withMessage(MessageValidator.isRequired('newPassword'))
+        .isLength({ min: 6 })
+        .withMessage(MessageValidator.minLength('newPassword', 6))
 ]);

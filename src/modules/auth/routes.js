@@ -35,7 +35,8 @@ import {
     authActionMiddleware,
     registerActionMiddleware,
     addUserActionMiddleware,
-    updateUserActionMiddleware
+    updateUserActionMiddleware,
+    passwordActionMiddleware
 } from './middleware/requests/userMiddleware'
 
 const router = express.Router()
@@ -48,12 +49,12 @@ router.get('/api/user/roles', authToken, readRolesAction)
 //USER
 router.get('/api/users/admin', authToken, readUsersAction)
 router.post('/api/user/create', registerActionMiddleware, registerAction)
-router.put('/api/user/password', authToken, updatePasswordUserAction)
+router.put('/api/user/password', [authToken, passwordActionMiddleware], updatePasswordUserAction)
 router.put('/api/users/password/:id', authToken, updatePasswordAdminAction)
 router.post('/api/users/user', authToken, addUserActionMiddleware, addUserAction)
 router.get('/api/users/user', authToken, getUserByTokenAction)
 router.get('/api/users/user/:id', authToken, getUserAction)
-router.put('/api/users/user', authToken, updateUserAction)
+router.put('/api/users/user', [authToken, updateUserActionMiddleware], updateUserAction)
 router.get('/api/users/avatar', authToken, readAvatarAction)
 router.post('/api/user/avatar', [authToken, multerI], createAvatarAction)
 

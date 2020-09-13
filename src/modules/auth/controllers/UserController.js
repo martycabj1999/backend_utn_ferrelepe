@@ -34,7 +34,7 @@ let response = createResponseFormat()
 
 module.exports.readUsersAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     try {
         const users = await readUsers()
@@ -58,7 +58,7 @@ module.exports.readAvatarAction = async function (req, res) {
 
     var urlBackend = URL_BACKEND.concat('/')
 
-    logRequest(req)
+    let response = logRequest(req)
 
     const user = await getUser(req.user.id)
     const avatar = urlBackend.concat(user.avatar)
@@ -82,7 +82,7 @@ module.exports.readAvatarAction = async function (req, res) {
 
 module.exports.createAvatarAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     let {
         user,
@@ -123,7 +123,7 @@ module.exports.createAvatarAction = async function (req, res) {
 
 module.exports.updatePasswordUserAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     let {
         currentPassword,
@@ -149,7 +149,7 @@ module.exports.updatePasswordUserAction = async function (req, res) {
 
 module.exports.updatePasswordAdminAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     try {
         const user = await updatePasswordAdmin(req.params.id, req.body.password)
@@ -172,7 +172,7 @@ module.exports.updatePasswordAdminAction = async function (req, res) {
 
 module.exports.addUserAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     let {
         name,
@@ -196,7 +196,7 @@ module.exports.addUserAction = async function (req, res) {
 }
 
 module.exports.getUserAction = async function (req, res) {
-    logRequest(req)
+    let response = logRequest(req)
     try {
         let id = req.params.id
         const user = await getUser(id)
@@ -210,7 +210,7 @@ module.exports.getUserAction = async function (req, res) {
 }
 
 module.exports.getUserByTokenAction = async function (req, res) {
-    logRequest(req)
+    let response = logRequest(req)
     try {
         const user = await getUser(req.user.id)
         response.data = user
@@ -223,15 +223,17 @@ module.exports.getUserByTokenAction = async function (req, res) {
 }
 
 module.exports.updateUserAction = async function (req, res) {
-    logRequest(req)
+    let response = logRequest(req)
     try {
         let {
             name,
             username,
-            biography
+            email,
+            biography,
+            career_id
         } = req.body
 
-        const userUpdate = await updateUser(req.user.id, name, username, biography)
+        const userUpdate = await updateUser(req.user.id, name, username, email, biography, career_id)
         response.data = userUpdate
         res.status(200).send(response)
     } catch (error) {

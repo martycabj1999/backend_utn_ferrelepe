@@ -52,12 +52,7 @@ module.exports = (sequelize, type) => {
         },
         active: {
             type: type.BOOLEAN,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: "Active es requerido"
-                },
-            },
+            defaultValue: true
         },
     }, {
         paranoid: true,
@@ -76,7 +71,7 @@ module.exports = (sequelize, type) => {
         }
     });
 
-     User.belongsTo(Career, {
+    User.belongsTo(Career, {
         foreignKey: {
             name: 'career_id'
         },
@@ -85,7 +80,7 @@ module.exports = (sequelize, type) => {
             key: 'id'
         }
     });
- 
+
     return User
 
 }

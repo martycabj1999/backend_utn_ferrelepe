@@ -3,11 +3,13 @@ import express from 'express'
 import {
     readForumsAction,
     addForumAction,
+    getForumAction,
     updateForumAction
 } from './controllers/ForumController'
 import {
     readPostsAction,
     addPostAction,
+    getPostAction,
     updatePostAction
 } from './controllers/PostController'
 import {
@@ -18,33 +20,31 @@ import {
 import {
     readFilesAction,
 } from './controllers/FileController'
-import {
+/* import {
     readCommentsAction,
-} from './controllers/CommentController'
+} from './controllers/CommentController' */
 import {
     authToken
 } from '../middleware/auth'
-import { readCommentAction } from './controllers/CommentController'
 
 
 const router = express.Router()
 //FORUM
 router.get('/api/forums', readForumsAction)
 router.post('/api/forums/forum', addForumAction)
+router.get('/api/forums/forum/:id', getForumAction)
 router.put('/api/forums/forum', updateForumAction)
 //POST
 router.get('/api/posts', readPostsAction)
 router.post('/api/posts/post', addPostAction)
-router.put('/api/posts/post', updatePostAction)
+router.get('/api/posts/post/:id', getPostAction)
+router.put('/api/posts/post/:id', updatePostAction)
 //TAG
 router.get('/api/tags', readTagsAction)
 router.post('/api/tags/tag', addTagAction)
-router.put('/api/tags/tag', updateTagAction)
 
 
-router.get('/api/files', readFilesAction)
-router.get('/api/comments', readCommentsAction)
-
-
+//router.get('/api/files', readFilesAction)
+//router.get('/api/comments', readCommentsAction)
 
 export default router;

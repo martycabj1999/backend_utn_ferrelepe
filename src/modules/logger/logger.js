@@ -3,13 +3,23 @@ const {
     format,
     transports
 } = require('winston');
+import {
+    createResponseFormat
+} from '../../helpers/responseFormat'
 
 export const logger = createLogger({
     transports: [
         new transports.File({
+            level: 'info',
             maxsize: 5120000,
             maxFiles: 5,
-            filename: `${__dirname}/../../../logs/log-api.log`
+            filename: `${__dirname}/../../../logs/info.log`
+        }),
+        new transports.File({
+            level: 'error',
+            maxsize: 5120000,
+            maxFiles: 5,
+            filename: `${__dirname}/../../../logs/error.log`
         }),
         new transports.Console({
             level: 'debug',
@@ -34,11 +44,13 @@ module.exports.logRequest = function (req) {
         referer: req.headers.referer,
         userAgent: req.headers["user-agent"]
     }
-
     logger.info(
         `{ 'Date': '${header.date}', 'Message': { 'tipo': 'REQUEST', 'Host': '${header.host}', 'Origin': '${header.origin}', 'Endpoint': '${header.referer}', 'UserAgent': '${header.userAgent}' } }`
     )
 
+    let response = createResponseFormat()
+
+    return response
 }
 
 module.exports.logError = function (req, error) {
@@ -47,12 +59,7 @@ module.exports.logError = function (req, error) {
         date: getDateForLog(),
         referer: req.headers ? req.headers.referer : req
     }
-
-    logger.error(
-        `{ 'Date': '${header.date}', 'Message': { 'tipo': 'ERROR', 'Endpoint': '${header.referer}', 'message': '${error}'} }`
-    )
+    const err = typeof error == 'object' ? JSON.stringify(error) : error
+    logger.error(`{ 'Date': '${header.date}', 'Message': { 'tipo': 'ERROR', 'Endpoint': '${header.referer}', 'message': '${err}'} }`)
 
 }
-
-module.exports.logResponse = function (response) {}
-module.exports.logError = function (response) {}

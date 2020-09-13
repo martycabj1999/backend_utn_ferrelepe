@@ -9,6 +9,12 @@ import {
     URL_BACKEND,
     DBURL
 } from '../../../../config';
+import {
+    logError
+} from '../../logger/logger'
+import {
+    MessageResponse
+} from '../../../helpers/messageResponse'
 
 const sequelize = new Sequelize(DBURL);
 
@@ -43,42 +49,46 @@ function generateToken(user, roleName) {
  * @returns {Object}
  */
 export const authService = async function (email, password) {
-
-    const user = await User.findOne({
-        where: {
-            email: email
-        }
-    }).then(async ({
-        dataValues
-    }) => {
-
-        if (dataValues.state === 0) {
-            return {
-                status: false,
-                msg: 'Disabled user'
-            };
-        }
-
-        const validPassword = bcryptjs.compareSync(password, dataValues.password)
-
-        if (!validPassword) {
-            return {
-                status: false,
-                msg: 'The email or password is invalid'
-            };
-        }
-
-        const role = await Role.findByPk(dataValues.role_id).then(({
+    try {
+        const user = await User.findOne({
+            where: {
+                email: email
+            }
+        }).then(async ({
             dataValues
-        }) => (dataValues))
+        }) => {
 
-        const token = generateToken(dataValues, role.name)
+            if (dataValues.state === 0) {
+                return {
+                    status: false,
+                    msg: 'Disabled user'
+                };
+            }
 
-        return token
+            const validPassword = bcryptjs.compareSync(password, dataValues.password)
 
-    })
+            if (!validPassword) {
+                return {
+                    status: false,
+                    msg: 'The email or password is invalid'
+                };
+            }
 
-    return user
+            const role = await Role.findByPk(dataValues.role_id).then(({
+                dataValues
+            }) => (dataValues))
+
+            const token = generateToken(dataValues, role.name)
+
+            return token
+
+        })
+
+        return user
+    } catch (error) {
+        logError('authService', error)
+        throw (MessageResponse.serviceCatch(error))
+    }
 
 }
 
@@ -92,99 +102,101 @@ export const authService = async function (email, password) {
  * @returns {Object}
  */
 export const authMethodService = async function (auth, user_id, method) {
+    try {
+        var user = null
+        switch (method) {
+            case 'google':
 
-    var user = null
-    switch (method) {
-        case 'google':
+                user = await User.findOne({
+                    where: {
+                        email: auth
+                    }
+                })
 
-            user = await User.findOne({
-                where: {
-                    email: auth
+                if (!user) {
+                    let role = await Role.findOne({
+                        name: 'user'
+                    }).then(({
+                        dataValues
+                    }) => (dataValues))
+
+                    let username = auth.split('@')[0]
+
+                    let newUser = await User.create({
+                        email: auth,
+                        username: username,
+                        google_id: user_id,
+                        role_id: role.id,
+                    });
+
+                    let token = generateToken(newUser, role.name)
+
+                    return token
                 }
-            })
 
-            if (!user) {
-                let role = await Role.findOne({
-                    name: 'user'
-                }).then(({
+                if (user.dataValues.active === 0) {
+                    return {
+                        status: false,
+                        msg: 'Disabled user'
+                    };
+                }
+
+                let role = await Role.findByPk(user.role_id).then(({
                     dataValues
                 }) => (dataValues))
 
-                let username = auth.split('@')[0]
-
-                let newUser = await User.create({
-                    email: auth,
-                    username: username,
-                    google_id: user_id,
-                    role_id: role.id,
-                    active: 1,
-                });
-
-                let token = generateToken(newUser, role.name)
+                const token = generateToken(user.dataValues, role.name)
 
                 return token
-            }
 
-            if (user.dataValues.active === 0) {
-                return {
-                    status: false,
-                    msg: 'Disabled user'
-                };
-            }
+            case 'facebook':
+                user = await User.findOne({
+                    where: {
+                        facebook_id: user_id
+                    }
+                })
 
-            let role = await Role.findByPk(user.role_id).then(({
-                dataValues
-            }) => (dataValues))
+                if (!user) {
 
-            const token = generateToken(user.dataValues, role.name)
+                    let role = await Role.findOne({
+                        name: 'user'
+                    }).then(({
+                        dataValues
+                    }) => (dataValues))
 
-            return token
+                    let username = auth.split('@')[0]
+                    let newUser = await User.create({
+                        username: username,
+                        facebook_id: auth,
+                        role_id: role.id,
+                    });
 
-        case 'facebook':
-            user = await User.findOne({
-                where: {
-                    facebook_id: user_id
+                    let token = generateToken(newUser, role.name)
+
+                    return token
                 }
-            })
 
-            if (!user) {
+                if (user.dataValues.active === 0) {
+                    return {
+                        status: false,
+                        msg: 'Disabled user'
+                    };
+                }
 
-                let role = await Role.findOne({
-                    name: 'user'
-                }).then(({
+                let newRole = await Role.findByPk(user.role_id).then(({
                     dataValues
                 }) => (dataValues))
 
-                let username = auth.split('@')[0]
-                let newUser = await User.create({
-                    username: username,
-                    facebook_id: auth,
-                    role_id: role.id,
-                    active: 1,
-                });
+                const newToken = generateToken(user.dataValues, newRole.name)
 
-                let token = generateToken(newUser, role.name)
+                return newToken
 
-                return token
-            }
-
-            if (user.dataValues.active === 0) {
-                return {
-                    status: false,
-                    msg: 'Disabled user'
-                };
-            }
-
-            let newRole = await Role.findByPk(user.role_id).then(({
-                dataValues
-            }) => (dataValues))
-
-            const newToken = generateToken(user.dataValues, newRole.name)
-
-            return newToken
-
-        default:
-            return user
+            default:
+                return user
+        }
+    } catch (error) {
+        logError('authMethodService', error)
+        throw (MessageResponse.serviceCatch(error))
     }
 
 }

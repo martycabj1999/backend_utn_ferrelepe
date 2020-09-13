@@ -5,15 +5,10 @@ import {
 import {
     readCommentsService,
 } from '../services/CommentService'
-import {
-    createResponseFormat
-} from '../../../helpers/responseFormat'
-
-let response = createResponseFormat();
 
 export const readCommentsAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     try {
         const comment = await readCommentsService()

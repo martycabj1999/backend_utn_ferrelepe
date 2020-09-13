@@ -20,7 +20,7 @@ let response = createResponseFormat()
  */
 module.exports.readRolesAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     try {
         const roles = await readRolesService()

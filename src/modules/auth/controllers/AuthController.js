@@ -19,7 +19,7 @@ let response = createResponseFormat()
 
 module.exports.authAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     //Exec validations
     const errors = validationResult(req);
@@ -51,7 +51,7 @@ module.exports.authAction = async function (req, res) {
 
 module.exports.authMethodAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     let {
         token,

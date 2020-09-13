@@ -15,7 +15,7 @@ let response = createResponseFormat();
 
 export const readSubjectsAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     try {
         const subjects = await readSubjectsService()
@@ -30,7 +30,7 @@ export const readSubjectsAction = async function (req, res) {
 
 export const addSubjectAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
     let {
         name,
         description,
@@ -50,7 +50,7 @@ export const addSubjectAction = async function (req, res) {
 }
 
 export const updateSubjectAction = async function (req, res) {
-    logRequest(req)
+    let response = logRequest(req)
     try {
         let {
             id,

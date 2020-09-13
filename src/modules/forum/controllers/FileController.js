@@ -5,15 +5,10 @@ import {
 import {
     readFilesService,
 } from '../services/FileService'
-import {
-    createResponseFormat
-} from '../../../helpers/responseFormat'
-
-let response = createResponseFormat();
 
 export const readFilesAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     try {
         const files = await readFilesService()

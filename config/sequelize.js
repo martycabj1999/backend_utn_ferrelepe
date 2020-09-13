@@ -7,7 +7,6 @@ import ForumModel from '../src/modules/forum/models/ForumModel'
 import PostModel from '../src/modules/forum/models/PostModel'
 import TagModel from '../src/modules/forum/models/TagModel'
 import FileModel from '../src/modules/forum/models/FileModel'
-import CommentModel from '../src/modules/forum/models/CommentModel'
 import CareerModel from '../src/modules/career/models/CareerModel'
 import SubjectModel from '../src/modules/career/models/SubjectModel'
 
@@ -28,7 +27,6 @@ const Forum = ForumModel(sequelize, Sequelize);
 const Post = PostModel(sequelize, Sequelize);
 const Tag = TagModel(sequelize, Sequelize);
 const File = FileModel(sequelize, Sequelize);
-const Comment = CommentModel(sequelize, Sequelize);
 //CAREER
 const Career = CareerModel(sequelize, Sequelize);
 const Subject = SubjectModel(sequelize, Sequelize);
@@ -141,13 +139,13 @@ sequelize.sync()
             file_url: 'https://i.pinimg.com/170x/5b/88/9e/5b889e894cf13ac90a953a86fe8afddf.jpg',
             post_id: 1
         })
-        await Comment.create({
+        /* await Comment.create({
             text: 'Tremendo post papa, buenísimo',
             likes: 0,
             dislikes: 0,
             post_id: 2,
             user_id: 1,
-        })
+        }) */
     })
 
 export default sequelize

@@ -5,17 +5,13 @@ import {
 import {
     readPostsService,
     addPostService,
+    getPostService,
     updatePostService
 } from '../services/PostService'
-import {
-    createResponseFormat
-} from '../../../helpers/responseFormat'
-
-let response = createResponseFormat();
 
 export const readPostsAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     try {
         const posts = await readPostsService()
@@ -28,10 +24,25 @@ export const readPostsAction = async function (req, res) {
     }
 }
 
+export const getPostAction = async function (req, res) {
+
+    let response = logRequest(req)
+
+    try {
+        const posts = await getPostService(req.params.id)
+        response.data = posts
+        return res.status(200).json(response)
+    } catch (error) {
+        logError(req, error)
+        response.errors.push(error)
+        return res.status(500).send(response)
+    }
+}
+
 
 export const addPostAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
     let {
         title,
         content,
@@ -54,7 +65,7 @@ export const addPostAction = async function (req, res) {
 }
 
 export const updatePostAction = async function (req, res) {
-    logRequest(req)
+    let response = logRequest(req)
     try {
         let {
             id,

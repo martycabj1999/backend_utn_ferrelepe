@@ -15,7 +15,7 @@ let response = createResponseFormat();
 
 export const readCareersAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
 
     try {
         const careers = await readCareersService()
@@ -30,7 +30,7 @@ export const readCareersAction = async function (req, res) {
 
 export const addCareersAction = async function (req, res) {
 
-    logRequest(req)
+    let response = logRequest(req)
     let {
         name,
     } = req.body
@@ -47,7 +47,7 @@ export const addCareersAction = async function (req, res) {
 }
 
 export const updateCareerAction = async function (req, res) {
-    logRequest(req)
+    let response = logRequest(req)
     try {
         let {
             id,

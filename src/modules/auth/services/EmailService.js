@@ -1,4 +1,10 @@
 import ProviderSMTP from '../../../../SMTP/ProviderSMTP';
+import {
+    logError
+} from '../../logger/logger'
+import {
+    MessageResponse
+} from '../../../helpers/messageResponse'
 
 /**
  * emailService
@@ -9,14 +15,19 @@ import ProviderSMTP from '../../../../SMTP/ProviderSMTP';
  * @returns {Object}
  */
 export const emailService = async function (name, email) {
-    ProviderSMTP.sendEmail(name, email)
-        .then(response => {
-            return response
-        })
-        .catch(error => {
-            console.error(error);
-            return error
-        })
+    try {
+        ProviderSMTP.sendEmail(name, email)
+            .then(response => {
+                return response
+            })
+            .catch(error => {
+                console.error(error);
+                return error
+            })
+    } catch (error) {
+        logError('emailService', error)
+        throw (MessageResponse.serviceCatch(error))
+    }
 }
 
 /**
@@ -29,12 +40,17 @@ export const emailService = async function (name, email) {
  * @returns {Object}
  */
 export const emailServiceResetPassword = async function (name, email, token) {
-    ProviderSMTP.sendEmailResetPassword(name, email, token)
-        .then(response => {
-            return response
-        })
-        .catch(error => {
-            console.error(error);
-            return error
-        })
+    try {
+        ProviderSMTP.sendEmailResetPassword(name, email, token)
+            .then(response => {
+                return response
+            })
+            .catch(error => {
+                console.error(error);
+                return error
+            })
+    } catch (error) {
+        logError('emailService', error)
+        throw (MessageResponse.serviceCatch(error))
+    }
 }
