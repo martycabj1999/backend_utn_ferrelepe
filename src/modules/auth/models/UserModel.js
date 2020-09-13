@@ -1,4 +1,5 @@
 import RoleModel from './RoleModel';
+import CareerModel from '../../career/models/CareerModel';
 import Sequelize from 'sequelize';
 
 import {
@@ -7,7 +8,7 @@ import {
 
 const sequelize = new Sequelize(DBURL);
 
-//const Career = CareerModel(sequelize, Sequelize);
+const Career = CareerModel(sequelize, Sequelize);
 const Role = RoleModel(sequelize, Sequelize);
 
 module.exports = (sequelize, type) => {
@@ -75,7 +76,7 @@ module.exports = (sequelize, type) => {
         }
     });
 
-    /* User.belongsTo(Career, {
+     User.belongsTo(Career, {
         foreignKey: {
             name: 'career_id'
         },
@@ -84,7 +85,7 @@ module.exports = (sequelize, type) => {
             key: 'id'
         }
     });
- */
+ 
     return User
 
 }

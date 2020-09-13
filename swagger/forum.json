@@ -1,0 +1,621 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Documenting API UTN Ferrelepe with Swagger.",
+        "version": "0.2.0",
+        "title": "API Documented"
+    },
+    "host": "localhost:8000",
+    "basePath": "/api",
+    "tags": [{
+            "name": "Auth",
+            "description": "User authentication"
+        },
+        {
+            "name": "Forums",
+            "description": "Forums operation"
+        }
+    ],
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "/auth": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Authenticate the user and generate the Token",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [{
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Email",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Password",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "I login successfully"
+                    },
+                    "400": {
+                        "description": "The request was unsuccessful or Parameters are inconsistent"
+                    },
+                    "403": {
+                        "description": "Email or Password invalid"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/forums": {
+            "get": {
+                "tags": [
+                    "Forums"
+                ],
+                "summary": "Returns all forums",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todos los foros retornados"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
+                    }
+                }
+            }
+        },
+        "/forums/forum": {
+            "post": {
+                "tags": [
+                    "Forums"
+                ],
+                "summary": "Create Forums",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "nombre de foro",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "description",
+                        "in": "formData",
+                        "description": "Descripcion del foro en texto",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "subject_id",
+                        "in": "formData",
+                        "description": "ID de materia de la que trata el foro",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "careers_id",
+                        "in": "formData",
+                        "description": "ID de la carrera a la que pertenece el foro",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The Posts was created successfully"
+                    },
+                    "400": {
+                        "description": "The request was not successful or The Posts with this ID does not exist"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:forum",
+                        "read:forum"
+                    ]
+                }]
+            },
+            "put": {
+                "tags": [
+                    "Forum"
+                ],
+                "summary": "Editar foro por ID",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "nombre de foro",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "description",
+                        "in": "formData",
+                        "description": "Descripcion del foro en texto",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "subject_id",
+                        "in": "formData",
+                        "description": "ID de materia de la que trata el foro",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "careers_id",
+                        "in": "formData",
+                        "description": "ID de la carrera a la que pertenece el foro",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Forum successfully modified"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    },
+                    "404": {
+                        "description": "We have not found a forum with that ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:forum",
+                        "read:forum"
+                    ]
+                }]
+            }
+        },
+        "/posts": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Returns all posts",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todos los posts han sido retornados"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
+                    }
+                }
+            }
+        },
+
+        "/posts/post": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Create Posts",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "formData",
+                        "description": "Titulo de post",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "content",
+                        "in": "formData",
+                        "description": "Contenido en texto",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "formData",
+                        "description": "ID de usuario creador",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "forum_id",
+                        "in": "formData",
+                        "description": "ID de foro al que pertenece",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "points",
+                        "in": "formData",
+                        "description": "Puntos de post",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "views",
+                        "in": "formData",
+                        "description": "Visitas del post",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The Posts was created successfully"
+                    },
+                    "400": {
+                        "description": "The request was not successful or The Posts with this ID does not exist"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:post",
+                        "read:post"
+                    ]
+                }]
+            },
+            "put": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Editar post por ID",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "ID de post",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "title",
+                        "in": "formData",
+                        "description": "Titulo de post",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "content",
+                        "in": "formData",
+                        "description": "Contenido en texto",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "formData",
+                        "description": "ID de usuario creador",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "forum_id",
+                        "in": "formData",
+                        "description": "ID de foro al que pertenece",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "points",
+                        "in": "formData",
+                        "description": "Puntos de post",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "views",
+                        "in": "formData",
+                        "description": "Visitas del post",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post successfully modified"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    },
+                    "404": {
+                        "description": "We have not found a post with that ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:post",
+                        "read:post"
+                    ]
+                }]
+            }
+        },
+        "/tags": {
+            "get": {
+                "tags": [
+                    "Tags"
+                ],
+                "summary": "Returns all tags",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todos los tags han sido retornados"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
+                    }
+                }
+            }
+        },
+
+        "/tags/tag": {
+            "post": {
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "Create Tag",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "nombre de tag",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The Tag was created successfully"
+                    },
+                    "400": {
+                        "description": "The request was not successful or The tag with this ID does not exist"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:tag",
+                        "read:tag"
+                    ]
+                }]
+            },
+            "put": {
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "Editar tag por ID",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "ID del tag",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "nombre de foro",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tag successfully modified"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    },
+                    "404": {
+                        "description": "We have not found a tag with that ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:tag",
+                        "read:tag"
+                    ]
+                }]
+            }
+        },
+        "/files": {
+            "get": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Returns all files",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todos los files han sido retornados"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
+                    }
+                }
+            }
+        },
+        "/comments": {
+            "get": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Returns all comments",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todos los comments han sido retornados"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
+                    }
+                }
+            }
+        }
+    },
+
+    "securityDefinitions": {
+        "auth_token": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "Users": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "ddi": {
+                    "type": "integer"
+                },
+                "ddn": {
+                    "type": "integer"
+                },
+                "phone": {
+                    "type": "integer"
+                },
+                "avatar": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "object",
+                    "$ref": "#/definitions/Roles"
+                },
+                "status": {
+                    "type": "boolean"
+                }
+            },
+            "xml": {
+                "name": "User"
+            }
+        },
+        "Roles": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Role"
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}

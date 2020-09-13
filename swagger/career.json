@@ -1,0 +1,402 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Documenting API UTN Ferrelepe with Swagger.",
+        "version": "0.2.0",
+        "title": "API Documented"
+    },
+    "host": "localhost:8000",
+    "basePath": "/api",
+    "tags": [{
+            "name": "Auth",
+            "description": "User authentication"
+        },
+        {
+            "name": "Forums",
+            "description": "Forums operation"
+        }
+    ],
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "/auth": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Authenticate the user and generate the Token",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [{
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Email",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Password",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "I login successfully"
+                    },
+                    "400": {
+                        "description": "The request was unsuccessful or Parameters are inconsistent"
+                    },
+                    "403": {
+                        "description": "Email or Password invalid"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/careers": {
+            "get": {
+                "tags": [
+                    "Careers"
+                ],
+                "summary": "Returns all careers",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todas las carreras han sido retornadas"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
+                    }
+                }
+            }
+        },
+        "/careers/career": {
+            "post": {
+                "tags": [
+                    "Careers"
+                ],
+                "summary": "Create Career",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [{
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The career was created successfully"
+                    },
+                    "400": {
+                        "description": "The request was not successful or The career with this ID does not exist"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:career",
+                        "read:career"
+                    ]
+                }]
+            },
+            "put": {
+                "tags": [
+                    "Career"
+                ],
+                "summary": "Editar carrera por ID",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "ID de carrera",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Career successfully modified"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    },
+                    "404": {
+                        "description": "We have not found a career with that ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:career",
+                        "read:career"
+                    ]
+                }]
+            }
+        },
+        "/subjects": {
+            "get": {
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Returns all subjects",
+                "description": "",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todas las materias han sido retornadas"
+                    },
+                    "500": {
+                        "description": "Error de servidor"
+                    }
+                }
+            }
+        },
+        "/subjects/subject": {
+            "post": {
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Create Subject",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "year",
+                        "in": "formData",
+                        "description": "Año de materia",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "career_id",
+                        "in": "formData",
+                        "description": "ID de carrera",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "description",
+                        "in": "formData",
+                        "description": "Descripcion de materia",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The subject was created successfully"
+                    },
+                    "400": {
+                        "description": "The request was not successful or The subject with this ID does not exist"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:subject",
+                        "read:subject"
+                    ]
+                }]
+            },
+            "put": {
+                "tags": [
+                    "Subject"
+                ],
+                "summary": "Editar materia por ID",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "ID de materia",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "year",
+                        "in": "formData",
+                        "description": "Año de materia",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "career_id",
+                        "in": "formData",
+                        "description": "ID de carrera",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "description",
+                        "in": "formData",
+                        "description": "Descripcion de materia",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Subject successfully modified"
+                    },
+                    "401": {
+                        "description": "Not authorized"
+                    },
+                    "404": {
+                        "description": "We have not found a subject with that ID"
+                    }
+                },
+                "security": [{
+                    "auth_token": [
+                        "write:subject",
+                        "read:subject"
+                    ]
+                }]
+            }
+        }
+    },
+
+    "securityDefinitions": {
+        "auth_token": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "Users": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "ddi": {
+                    "type": "integer"
+                },
+                "ddn": {
+                    "type": "integer"
+                },
+                "phone": {
+                    "type": "integer"
+                },
+                "avatar": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "object",
+                    "$ref": "#/definitions/Roles"
+                },
+                "status": {
+                    "type": "boolean"
+                }
+            },
+            "xml": {
+                "name": "User"
+            }
+        },
+        "Roles": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Role"
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}

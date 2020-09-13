@@ -17,6 +17,8 @@ dotenv.config();
 
 //Routes
 import authRoutes from './src/modules/auth/routes';
+import forumRoutes from './src/modules/forum/routes';
+import careerRoutes from './src/modules/career/routes';
 
 //Middlewares
 import {
@@ -31,8 +33,12 @@ const port = PORT_BACKEND;
 //Swagger
 import swaggerUi from 'swagger-ui-express';
 import swaggerAuth from './swagger/auth.json';
+import swaggerForum from './swagger/forum.json';
+import swaggerCareer from './swagger/career.json';
 
 app.use('/api-auth', swaggerUi.serve, swaggerUi.setup(swaggerAuth));
+app.use('/api-forum', swaggerUi.serve, swaggerUi.setup(swaggerForum));
+app.use('/api-career', swaggerUi.serve, swaggerUi.setup(swaggerCareer));
 
 app.use(function (err, req, res, next) {
     console.error(err.stack);
@@ -57,6 +63,9 @@ app.use(rbacMiddleware);
 
 //Routes
 app.use('/', authRoutes);
+app.use('/', forumRoutes);
+app.use('/', careerRoutes);
+
 
 //It allows consuming the images saved in the Backend
 app.use('/assets', express.static('assets'));
